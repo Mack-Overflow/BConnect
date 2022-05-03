@@ -2,42 +2,54 @@
 version: '3'
 services:
 
-    # PHP Service
-    # app: 
-    #     build: 
+    # app:
+    #     build:
     #         context: .
-    #         dockerfile: Dockerfile
-    #     image: cloudsigma.com/php 
-    
+    #         dockerfile: Dockerfile.btcnt
+    #         args:
+    #             WWWGROUP: '${WWWGROUP}'
+    #     image: sail-8.1/app
+    #     container_name: app
+    #     restart: unless-stopped
+    #     tty: true
+    #     extra_hosts:
+    #         - 'host.docker.internal:host-gateway'
+    #     ports:
+    #         - '${APP_PORT:-80}:80'
+    #     environment:
+    #         WWWUSER: '${WWWUSER}'
+    #         LARAVEL_SAIL: 1
+    #         XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+    #         XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    #     volumes:
+    #         - '.:/var/www/html'
+    #     networks:
+    #         - sail
+    #     depends_on:
+    #         - mysql
+
     app:
         build:
             context: .
-            dockerfile: Dockerfile.btcnt
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.1/app
-        container_name: app
-        restart: unless-stopped
-        tty: true
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            dockerfile: Dockerfile
+        working_dir: /var/www/html
         volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
+            - ./:/var/www/html
         depends_on:
-            - mysql
+            - "database"
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile.web
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        ports:
+            - 8000:80
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
+            - '${FORWARD_DB_PORT:-33061}:3306'
         environment:
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
             # MYSQL_ROOT_HOST: "%"
@@ -46,6 +58,7 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 0
         volumes:
+            # -dbdata:/var/lib/mysql #persist data across instances
             - 'sail-mysql:/var/lib/mysql'
         networks:
             - sail

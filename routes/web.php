@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Http\Controllers\{
+    LoginController,
+    LogoutController,
+    CreateCampaignController,
+    SmsController,
+    UploadRecordsController
+};
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('campaign', [CreateCampaignController::class, 'index'])->name('campaign.index');
+Route::get('sendSMS', [SmsController::class, 'index']);
+Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);

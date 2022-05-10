@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['*'], // Entire Laravel app is API
+    'paths' => ['*', 'sanctum/csrf-cookie'], // Entire Laravel app is API
 
     'allowed_methods' => ['*'],
 

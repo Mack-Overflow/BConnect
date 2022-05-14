@@ -19,15 +19,7 @@ class UploadRecordsController extends Controller
      */
     public function upload(Request $request)
     {
-        $file_name = $request->uploadFile;
-        if (!file_exists($file_name) || !is_readable($file_name))
-        {
-            return response()->json(['error' => 'Could not read or open provided file']);
-        }
-
-        $file_type = pathinfo($file_name);
-
-        if ($file_type["extension"] = "csv") return $this->uploadRecord->uploadCsv($file_name);
+        return $this->uploadRecord->handle($request);
     }
 
 }

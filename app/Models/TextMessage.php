@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class TextMessage extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+
+    ];
 }

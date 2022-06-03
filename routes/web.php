@@ -14,17 +14,28 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\{
-    LoginController,
-    LogoutController,
     CreateCampaignController,
     SmsController,
-    UploadRecordsController
+    UploadRecordsController,
+    TestEndpointController,
+};
+use App\Http\Controllers\Auth\{
+    LoginController,
+    LogoutController,
 };
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('campaign', [CreateCampaignController::class, 'index'])->name('campaign.index');
+// Login/Logout Routes
+Route::post('/login', LoginController::class);
+Route::post('/logout', LogoutController::class);
+
+// get curr user
+Route::get('/get-user', [TestEndpointController::class, 'getUser']);
+
+// Route::get('campaign', [CreateCampaignController::class, 'index'])->name('campaign.index');
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
+Route::post('/createCampaign', [CreateCampaignController::class, 'create']);

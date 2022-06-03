@@ -10,6 +10,8 @@ class TextMessage extends Model
     use HasFactory;
 
     protected $fillable = [
-
+        'header',
+        'body',
+        'url'
     ];
 }

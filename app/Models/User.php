@@ -12,6 +12,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
+
+    /**
+     * @var string
+     */
+    protected $foreignKey = 'businessId';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'businessId'
     ];
 
     /**

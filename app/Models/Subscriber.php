@@ -9,13 +9,19 @@ class Subscriber extends Model
 {
     use HasFactory;
 
+    protected $table = 'subscribers';
+
     /**
      * Primary key associated with the table.
      * 
      * @var string
      */
-
     protected $primaryKey = 'phoneNumber';
+
+    /**
+     * @var string
+     */
+    protected $foreignKey = 'businessId';
     public $incrementing = false;
     
     /**
@@ -25,6 +31,7 @@ class Subscriber extends Model
         'firstName',
         'lastName',
         'visitDate',
-        'phoneNumber'
+        'phoneNumber',
+        'businessId'
     ];
 }

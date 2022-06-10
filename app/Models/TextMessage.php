@@ -9,6 +9,11 @@ class TextMessage extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string
+     */
+    protected $foreignKey = 'businessId';
+
     protected $fillable = [
         'header',
         'body',

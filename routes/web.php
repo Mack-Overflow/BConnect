@@ -38,4 +38,6 @@ Route::get('/get-user', [TestEndpointController::class, 'getUser']);
 // Route::get('campaign', [CreateCampaignController::class, 'index'])->name('campaign.index');
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
-Route::post('/createCampaign', [CreateCampaignController::class, 'create']);
+Route::post('createCampaign', [CreateCampaignController::class, 'create']);
+
+Route::get('fetch-subscribers', [UploadRecordsController::class, 'fetch']);

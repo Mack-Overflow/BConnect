@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('text_messages', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('businessId');
+            $table->foreignId('businessId')->references('id')->on('businesses');
             $table->text('header');
             $table->text('body');
             $table->string('url');

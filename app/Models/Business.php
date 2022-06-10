@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use User;
 
 class Business extends Model
 {
@@ -20,10 +21,15 @@ class Business extends Model
     /**
      * @var string
      */
-    protected $foreignKey = 'managerUid';
+    protected $foreignKey = 'manager_id';
 
     protected $fillable = [
         'business_name',
         'package_tier',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'businessId', 'id');
+    }
 }

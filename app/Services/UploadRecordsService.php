@@ -14,7 +14,6 @@ class UploadRecordsService
      */
     public function handle(Request $request)
     {
-        $businessName = $request->businessName;
         $fileName = $request->filename;
         
         // \Log::info($request);
@@ -107,13 +106,15 @@ class UploadRecordsService
                 $lname = $entry["Last Name"];
                 $date = $entry["Date (YYYY-MM-DD)"];
                 $phoneNo = $entry["Phone No."];
+                $businessId = auth()->user()->businessId;
                 // \Log::info($fname.$lname.$date.$phoneNo);
 
                 $insertData = [
                     'firstName' => $fname,
                     'lastName' => $lname,
                     'visitDate'  => $date,
-                    'phoneNumber' => $phoneNo
+                    'phoneNumber' => $phoneNo,
+                    'businessId' => $businessId
                 ];
 
                 $subscriber = Subscriber::firstOrCreate($insertData);

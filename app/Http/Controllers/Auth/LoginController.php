@@ -28,8 +28,9 @@ class LoginController extends Controller
             throw new AuthenticationException();
         }
         $request->session()->regenerate();
-
-        return response()->json("Logged In!", 201);
+        \Log::info(\Auth::user());
+        // Include necessary user data in Json response
+        return response()->json(['message' => 'Logged In!', 'user_data' => auth()->user()], 201);
     }
 
     // private function authenticateFrontend()

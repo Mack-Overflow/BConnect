@@ -20,6 +20,6 @@ class CreateCampaignController extends Controller
 
     public function create(Request $request)
     {
-        dd($request);
+        \Log::info($request);
     }
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('business_name');
             $table->string('package_tier');
+            $table->unsignedBigInteger('manager_id');
+            $table->foreign('manager_id')->references('users')->on('id');
             $table->timestamps();
         });
     }

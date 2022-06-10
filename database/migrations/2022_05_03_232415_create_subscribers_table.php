@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('firstName', 255)->nullable()->index('firstName');
             $table->string('lastName', 255)->nullable()->index('lastName');
             $table->string('phoneNumber', 255)->index('phoneNumber')->unique();
+            // $table->unsignedBigInteger('businessId');
+            $table->foreignId('businessId')->references('id')->on('businesses')->default(1);
             $table->date('visitDate');
             $table->tinyInteger('numVisits')->default(0);
             $table->tinyInteger('urlClickedPurchased')->default(0);
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscriber');
+        Schema::dropIfExists('subscribers');
     }
 };

@@ -9,7 +9,7 @@ class TestEndpointController extends Controller
 {
     public function getUser()
     {
-        // return json_encode(Auth::user());
-        return "hello, world";
+        return json_encode(Auth::user());
+        // return "hello, world";
     }
 }

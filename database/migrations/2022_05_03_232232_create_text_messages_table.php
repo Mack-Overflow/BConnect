@@ -15,13 +15,12 @@ return new class extends Migration
     {
         Schema::create('text_messages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('businessId');
-            $table->foreignId('businessId')->references('id')->on('businesses');
-            $table->text('header');
+            $table->foreignId('businessId')->references('id')->on('businesses')->default(0);
+            $table->text('header')->nullable();
             $table->text('body');
-            $table->string('url');
+            $table->string('url')->nullable();
+            $table->string('sendToType')->default('*');
             $table->timestamps();
-            $table->string('body');
         });
     }
 

@@ -40,4 +40,4 @@ Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
 Route::post('createCampaign', [CreateCampaignController::class, 'create']);
 
-Route::get('fetch-subscribers', [UploadRecordsController::class, 'fetch']);
+Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);

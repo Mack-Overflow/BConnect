@@ -17,6 +17,8 @@ class TextMessage extends Model
     protected $fillable = [
         'header',
         'body',
-        'url'
+        'url',
+        'sendToType',
+        'businessId'
     ];
 }

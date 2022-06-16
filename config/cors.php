@@ -18,7 +18,6 @@ return [
     'paths' => [
         '*', 
         'sanctum/csrf-cookie', 
-        'createCampaign'
     ], // Entire Laravel app is API
 
     'allowed_methods' => ['*'],

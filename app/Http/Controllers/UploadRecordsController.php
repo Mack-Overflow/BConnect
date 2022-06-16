@@ -30,7 +30,7 @@ class UploadRecordsController extends Controller
     {
         \Log::info($request);
         $subscribers = Subscriber::where('businessId', $request->businessId)->get();
-        return response()->json(['subscriberData', $subscribers], 201);
+        return response()->json(['subscriberData' => $subscribers], 201);
     }
 
 }

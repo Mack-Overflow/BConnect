@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\{
-    CreateCampaignController,
+    CampaignController,
     SmsController,
     UploadRecordsController,
     TestEndpointController,
@@ -35,9 +35,10 @@ Route::post('/logout', LogoutController::class);
 // get curr user
 Route::get('/get-user', [TestEndpointController::class, 'getUser']);
 
-// Route::get('campaign', [CreateCampaignController::class, 'index'])->name('campaign.index');
+// Route::get('campaign', [CampaignController::class, 'index'])->name('campaign.index');
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
-Route::post('createCampaign', [CreateCampaignController::class, 'create']);
+Route::post('createCampaign', [CampaignController::class, 'create']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
+Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TextMessage;
 
-class CreateCampaignController extends Controller
+class CampaignController extends Controller
 {
     // protected $createCampaign;
 
@@ -13,12 +13,22 @@ class CreateCampaignController extends Controller
     // {
 
     // }
-
-    public function index()
+    
+    /**
+     * Endpoint: /fetch-campaigns
+     */
+    public function fetch(Request $request)
     {
-        // return "Hello!";
+        $biz_id = $request->businessId;
+        \Log::info($biz_id);
+        $campaigns = TextMessage::where('businessId', $biz_id)->get();
+        \Log::info($campaigns);
+        return response()->json(['campaigns' => $campaigns], 201);
     }
 
+    /**
+     * Endpoint: createCampaign
+     */
     public function create(Request $request)
     {
         $insertData = [

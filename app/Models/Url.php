@@ -9,5 +9,13 @@ class Url extends Model
 {
     use HasFactory;
 
-    protected $table = 'url';
+    protected $table = 'urls';
+
+    protected $foreignKey = 'subscriberId';
+
+    protected $fillable = [
+        'subscriberId',
+        'fullUrl',
+        'shortUrl',
+    ];
 }

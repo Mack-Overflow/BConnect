@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     SmsController,
     UploadRecordsController,
     TestEndpointController,
+    ReviewController,
 };
 use App\Http\Controllers\Auth\{
     LoginController,
@@ -42,3 +43,7 @@ Route::post('createCampaign', [CampaignController::class, 'create']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
 Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);
+
+// Reviews
+Route::get('/reviews/fetch/{businessId}/{reviewId}', [ReviewController::class, 'fetchReview']);
+Route::post('/reviews/store', [ReviewController::class, 'store']);

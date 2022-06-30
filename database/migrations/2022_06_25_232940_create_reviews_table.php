@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('text_messages', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('businessId')->references('id')->on('businesses')->default(0);
-            $table->text('header')->nullable();
-            $table->text('body');
-            $table->string('url')->nullable();
-            $table->string('promoCode')->nullable();
-            $table->string('sendToType')->default('*');
+            $table->integer('rating');
+            $table->text('reviewBody');
+            $table->string('customerName')->default('Jane Doe');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('text_messages');
+        Schema::dropIfExists('reviews');
     }
 };

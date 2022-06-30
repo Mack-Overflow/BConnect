@@ -23,6 +23,8 @@ class Business extends Model
      */
     protected $foreignKey = 'manager_id';
 
+    // Associate review data directly as business attributes, 
+    // Or create separate model for review data?
     protected $fillable = [
         'business_name',
         'package_tier',

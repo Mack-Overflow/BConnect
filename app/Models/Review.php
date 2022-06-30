@@ -5,21 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TextMessage extends Model
+class Review extends Model
 {
     use HasFactory;
 
-    /**
-     * @var string
-     */
+    protected $table = 'reviews';
+    protected $connection = 'mysql';
+
+    protected $primaryKey = 'reviewId';
+
     protected $foreignKey = 'businessId';
 
     protected $fillable = [
-        'header',
-        'body',
-        'url',
-        'promoCode',
-        'sendToType',
-        'businessId'
+        'rating',
+        'reviewBody',
+        'customerName'
     ];
 }

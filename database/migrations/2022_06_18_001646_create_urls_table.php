@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('url', function (Blueprint $table) {
+        Schema::create('urls', function (Blueprint $table) {
             $table->id();
+            // A subscriberId of 0 will be logically used to infer a generic Url
+            $table->foreignId('subscriberId')->references('id')->on('subscribers')->default(0);
+            $table->string('fullUrl');
+            $table->string('shortUrl');
             $table->timestamps();
         });
     }

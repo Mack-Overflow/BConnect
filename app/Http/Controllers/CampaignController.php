@@ -37,6 +37,7 @@ class CampaignController extends Controller
             'url' => $request->msgUrl,
             'businessId' => $request->businessId,
             'sendToType' => $request->sendToType,
+            'promoCode' => $request->promoCode,
         ];
 
         \Log::info($insertData);

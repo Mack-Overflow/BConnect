@@ -14,7 +14,8 @@ class GenerateReviewUrlService
     protected $base_62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
-     * Takes a Customer ID and generates a 
+     * Takes a Customer ID and generates a 7-character string for a 
+     * shortened URL
      */
     public function generate()
     {

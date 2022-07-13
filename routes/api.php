@@ -18,10 +18,10 @@ use App\Http\Controllers\Auth\{
 |
 */ 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    // \Log::info($request);
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     // \Log::info($request);
+//     return $request->user();
+// });
 
 Route::post('/login', LoginController::class);
 Route::post('/logout', LogoutController::class);

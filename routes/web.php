@@ -29,6 +29,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 // Login/Logout Routes
 Route::post('/login', LoginController::class);
 Route::post('/logout', LogoutController::class);
@@ -40,6 +44,7 @@ Route::get('/get-user', [TestEndpointController::class, 'getUser']);
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
 Route::post('createCampaign', [CampaignController::class, 'create']);
+Route::post('sendCampaign', [CampaignController::class, 'send']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
 Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);

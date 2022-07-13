@@ -38,8 +38,20 @@ class SendReviewText implements ShouldQueue
      *
      * @return void
      */
-    public function handle(GenerateReviewUrlService $genReview, SmsService $sms)
+    public function handle(GenerateReviewUrlService $genReview, SmsService $sms, string $reviewerPhoneNo)
     {
-        $reviewUrl = $genReview->generate();
+        $header = 'We want your feedback!';
+        $body = 'Take a minute at the provided link to give us a rating and share your experience.';
+        $sendToTypes = ['Review Invite' => 1];
+        
+        $shortUrl = $genReview->generate();
+
+        // FOR DEVELOPMENT ENV ONLY!
+        $reviewUrl = 'http://localhost:3000/create-review/'.$shortUrl;
+
+        $subscriberId = Subscriber::find($reviewerPhoneNo)->id;
+        Url::create(['fullUrl' => $reviewUrl, 'shortUrl' => $shortUrl, '']);
+
+        $sms->send($header, $body, $sendToTypes, $reviewUrl, $reviewerPhoneNo);
     }
 }

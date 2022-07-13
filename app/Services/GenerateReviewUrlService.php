@@ -34,7 +34,6 @@ class GenerateReviewUrlService
             // MongoDB may also be faster query time for 1D search
         } while (Url::where('shortUrl', $final_url)->exists());
         
-
         return $final_url;
     }
 }

@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TextMessage;
+use App\Services\SmsService;
 
 class CampaignController extends Controller
 {
-    // protected $createCampaign;
+    protected $smsService;
 
-    // public function __construct()
-    // {
-
-    // }
+    public function __construct(SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
     
     /**
      * Endpoint: /fetch-campaigns
@@ -52,5 +53,15 @@ class CampaignController extends Controller
 
         
         // \Log::info($request);
+    }
+
+    public function send(SendCampaignRequest $request)
+    {
+        $message = $request->body;
+        $header = $request->header;
+        $sendToType = $request->sendToTypes;
+        $url = $request->url;
+
+        $this->smsService->send();
     }
 }

@@ -12,8 +12,10 @@ class Url extends Model
     protected $table = 'urls';
 
     protected $foreignKey = 'subscriberId';
+    // protected $foreignKey = 'businessId';
 
     protected $fillable = [
+        'businessId',
         'subscriberId',
         'fullUrl',
         'shortUrl',

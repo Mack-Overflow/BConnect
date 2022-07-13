@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('urls', function (Blueprint $table) {
+        Schema::create('send_to_types', function (Blueprint $table) {
             $table->id();
-            // A subscriberId of 0 will be logically used to infer a generic Url
-            $table->foreignId('subscriberId')->references('id')->on('subscribers')->default(0);
-            $table->integer('businessId');
-            $table->string('fullUrl');
-            $table->string('shortUrl');
+            // For custom-created send to categories unique to each business
+            // $table->foreignId('businessId')->references('id')->on('businesses')->default(0);
+            $table->string('type')->unique();
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('urls');
+        Schema::dropIfExists('send_to_types');
     }
 };

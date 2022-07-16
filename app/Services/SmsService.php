@@ -41,14 +41,18 @@ class SmsService
             $client = new Client($account_id, $auth_tok);
 
             // Handle retrieving #'s from sendToType
-            
-            if ($sendToTypes['Review Invite']) {
+            // \Log::info($sendToTypes);
+
+            // if($sendToTypes['Review Invite'])
+            if ($sendToTypes === 'Review Invite' && $reviewerNo !== null) {
                 $client->messages->create($reviewerNo, [
                     'from' => $twilio_num,
-                    'body' => $header.'\n\n'.$body.'\n'.$url,
+                    'body' => "$header \n $body \n $url" 
                 ]);
 
                 return response()->json(['message' => 'Review invite sent!']);
+            } else if($sendToTypes === 'Review Invite' && $reviewerNo === null) {
+                return response()->json(['error' => 'No recipient phone number provided for reviewer'], 400);
             }
 
             // (getenv('APP_ENV') === 'local') ? $recipientNos = ["+14352224432"] : self::getRecipients($sendToTypes);
@@ -57,6 +61,7 @@ class SmsService
             
             foreach($recipientNos as $recipientNo)
             {
+                \Log::info("in loop");
                 $client->messages->create($recipientNo, [
                     'from' => $twilio_num,
                     'body' => $header.'\n\n'.$body.'\n'.$url

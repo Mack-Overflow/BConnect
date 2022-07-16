@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TextMessage;
 use App\Services\SmsService;
+use App\Http\Requests\SendCampaignRequest;
 
 class CampaignController extends Controller
 {
@@ -21,9 +22,9 @@ class CampaignController extends Controller
     public function fetch(Request $request)
     {
         $biz_id = $request->businessId;
-        \Log::info($biz_id);
+        // \Log::info($biz_id);
         $campaigns = TextMessage::where('businessId', $biz_id)->get();
-        \Log::info($campaigns);
+        // \Log::info($campaigns);
         return response()->json(['campaigns' => $campaigns], 201);
     }
 
@@ -54,14 +55,44 @@ class CampaignController extends Controller
         
         // \Log::info($request);
     }
-
-    public function send(SendCampaignRequest $request)
+    
+    /**
+     * Endpoint: POST /update-campaign
+     */
+    public function update(Request $request)
     {
+        $cmpId = $request->id;
+        $bizId = $request->businessId;
+        $campaign = TextMessage::find($cmpId);
+
+        $insertData = [
+            'header' => $request->msgHeader,
+            'body' => $request->msgBody,
+            'url' => 'https://'.$request->msgUrl,
+            'businessId' => $request->businessId,
+            'sendToType' => $request->sendToType,
+            'promoCode' => $request->promoCode,
+        ];
+
+        $campaign->update($insertData);
+        \Log::info($campaign);
+    }
+
+    /**
+     * Endpoint: POST /send-campaign
+     */
+    public function send(Request $request)
+    {
+        // $msgToSend = $request->message;
+
         $message = $request->body;
         $header = $request->header;
-        $sendToType = $request->sendToTypes;
+        $sendToTypes = $request->sendToType;
         $url = $request->url;
+        $body = $request->body;
 
-        $this->smsService->send();
+        \Log::info($request);
+
+        return $this->smsService->send($header, $body, $sendToTypes, $url);
     }
 }

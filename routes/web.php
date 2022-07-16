@@ -43,8 +43,9 @@ Route::get('/get-user', [TestEndpointController::class, 'getUser']);
 // Route::get('campaign', [CampaignController::class, 'index'])->name('campaign.index');
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
-Route::post('createCampaign', [CampaignController::class, 'create']);
-Route::post('sendCampaign', [CampaignController::class, 'send']);
+Route::post('/createCampaign', [CampaignController::class, 'create']);
+Route::post('/send-campaign', [CampaignController::class, 'send']);
+Route::post('/update-campaign', [CampaignController::class, 'update']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
 Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);
@@ -52,3 +53,4 @@ Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);
 // Reviews
 Route::get('/reviews/fetch/{businessId}/{reviewId}', [ReviewController::class, 'fetchReview']);
 Route::post('/reviews/store', [ReviewController::class, 'store']);
+

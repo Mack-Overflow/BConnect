@@ -9,8 +9,11 @@ class SendToType extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'type';
+
     protected $fillable = [
         'type',
-        'description'
+        'description',
+        'timesSent'
     ];
 }

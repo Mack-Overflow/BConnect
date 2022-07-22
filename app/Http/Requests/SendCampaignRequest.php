@@ -13,7 +13,7 @@ class SendCampaignRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,13 +23,13 @@ class SendCampaignRequest extends FormRequest
      */
     public function rules()
     {
-        \Log::info($this->request);
-
         return [
             // 'message' => ['required']
-            'body' => ['required', 'string', 'max:255'],
-            'sendToType' => ['required', 'string', 'max:255'],
-            'url' => ['required', 'string', 'max:255']
+            // 'id' => ['required', 
+            'body' => 'required|string|max:255',
+            'sendToType' => 'required|string|max:255',
+            'url' => 'required|string|max:255',
+            'header' => 'required|string|max:255'
         ];
     }
 }

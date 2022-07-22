@@ -19,6 +19,7 @@ class Review extends Model
     protected $fillable = [
         'rating',
         'reviewBody',
-        'customerName'
+        'customerName',
+        'businessId',
     ];
 }

@@ -52,5 +52,10 @@ Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);
 
 // Reviews
 Route::get('/reviews/fetch/{businessId}/{reviewId}', [ReviewController::class, 'fetchReview']);
+Route::get('/reviews/fetch-all/{businessId}', [ReviewController::class, 'fetchAll']);
+Route::post('/reviews/review-data', [ReviewController::class, 'fetchData']);
 Route::post('/reviews/store', [ReviewController::class, 'store']);
+
+// Handle Short URL links
+Route::get('/link/{shortUrl}', [LinkController::class, 'index']);
 

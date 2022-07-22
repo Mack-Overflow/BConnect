@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\SendToType;
+use App\Models\Url;
+use App\Models\Subscriber;
+use App\Models\SentMessage;
 use App\Services\GenerateReviewUrlService;
 use Twilio\Rest\Client;
 
@@ -30,7 +33,7 @@ class SmsService
      * 
      * @return json response
      */
-    public static function send(string $header, string $body, mixed $sendToTypes, string $url, string $reviewerNo=null)
+    public static function send(string $header, string $body, mixed $sendToTypes, string $url, int $businessId, string $reviewerNo=null)
     {
         try {
             // Get Twilio keys
@@ -43,12 +46,24 @@ class SmsService
             // Handle retrieving #'s from sendToType
             // \Log::info($sendToTypes);
 
+            if (getenv('APP_ENV') === 'local') $reviewerNo = "+14352224432";
+
             // if($sendToTypes['Review Invite'])
             if ($sendToTypes === 'Review Invite' && $reviewerNo !== null) {
+
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo) : Url::where('fullUrl', $url)->get()->shortUrl;
+
                 $client->messages->create($reviewerNo, [
                     'from' => $twilio_num,
-                    'body' => "$header \n $body \n $url" 
+                    'body' => "$header \n $body \n $shortUrl" 
                 ]);
+
+                $sent = SentMessage::firstOrCreate([
+                    'businessId' => $businessId,
+                    'sendToType' => $sendToTypes,
+                ]);
+                
+                $sent->timesSent++;
 
                 return response()->json(['message' => 'Review invite sent!']);
             } else if($sendToTypes === 'Review Invite' && $reviewerNo === null) {
@@ -56,15 +71,17 @@ class SmsService
             }
 
             // (getenv('APP_ENV') === 'local') ? $recipientNos = ["+14352224432"] : self::getRecipients($sendToTypes);
-            (getenv('APP_ENV') === 'local') ? $recipientNos = ["+14352224432"] : null;
+            $recipientNos = (getenv('APP_ENV') === 'local') ? ["+14352224432"] : null;
             if ($recipientNos === null) return;
             
             foreach($recipientNos as $recipientNo)
             {
-                \Log::info("in loop");
+                // \Log::info("in loop");
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo) : Url::where('fullUrl', $url)->get()->shortUrl;
+
                 $client->messages->create($recipientNo, [
                     'from' => $twilio_num,
-                    'body' => $header.'\n\n'.$body.'\n'.$url
+                    'body' => $header.'\n\n'.$body.'\n'.$shortUrl
                 ]);
             }
             
@@ -121,5 +138,31 @@ class SmsService
     public function read()
     {
         //
+    }
+
+    /**
+     * Creates a new Url to be used in message
+     * @param string $fullUrl
+     * @param string $customerPhoneNo
+     * 
+     * @return String $shortUrl
+     */
+    private static function handleNewUrl(string $fullUrl, $customerPhoneNo) : String
+    {
+        $shortUrl = GenerateReviewUrlService::generate();
+        // $shortUrl = $this->genReview->generate(); // Generate new Short URL
+        $subscriber = json_decode(Subscriber::where('phoneNumber', $customerPhoneNo)->get());
+        \Log::info($subscriber);
+        $subscriberId = $subscriber[0]->id;
+        \Log::info($subscriberId);
+
+        Url::create([
+            'businessId' => \Auth::user()->businessId,
+            'subscriberId' => $subscriberId,
+            'fullUrl' => $fullUrl,
+            'shortUrl' => $shortUrl,
+        ]);
+
+        return $shortUrl;
     }
 }

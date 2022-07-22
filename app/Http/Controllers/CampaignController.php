@@ -29,14 +29,16 @@ class CampaignController extends Controller
     }
 
     /**
-     * Endpoint: createCampaign
+     * Endpoint: /createCampaign
+     * 
+     * The URL will have a shortened URL generated when the message is sent
      */
     public function create(Request $request)
     {
         $insertData = [
             'header' => $request->msgHeader,
             'body' => $request->msgBody,
-            'url' => $request->msgUrl,
+            'url' => 'https://'.$request->msgUrl,
             'businessId' => $request->businessId,
             'sendToType' => $request->sendToType,
             'promoCode' => $request->promoCode,
@@ -81,7 +83,7 @@ class CampaignController extends Controller
     /**
      * Endpoint: POST /send-campaign
      */
-    public function send(Request $request)
+    public function send(SendCampaignRequest $request)
     {
         // $msgToSend = $request->message;
 
@@ -90,8 +92,7 @@ class CampaignController extends Controller
         $sendToTypes = $request->sendToType;
         $url = $request->url;
         $body = $request->body;
-
-        \Log::info($request);
+        // $promoCode = $request->promoCode;
 
         return $this->smsService->send($header, $body, $sendToTypes, $url);
     }

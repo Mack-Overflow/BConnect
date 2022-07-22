@@ -35,6 +35,7 @@ class UploadRecordsService
             $numempty = 0;
             $numduplicate = 0;
             $data = [];
+            $numSkipped = 0;
             $clean_headers = [];
             $current_row_number = 0; // Pass column header row
             $allowedcolheaders = UploadRecordsService::headersCsvUpload();
@@ -107,7 +108,13 @@ class UploadRecordsService
                 $date = $entry["Date (YYYY-MM-DD)"];
                 $phoneNo = $entry["Phone No."];
                 $businessId = auth()->user()->businessId;
-                // \Log::info($fname.$lname.$date.$phoneNo);
+
+                if (sizeof($phoneNo) === 10) {
+                    $phoneNo = "+1".$phoneNo;
+                } else {
+                    $numSkipped++;
+                    continue;
+                }
 
                 $insertData = [
                     'firstName' => $fname,

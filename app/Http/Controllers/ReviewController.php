@@ -49,11 +49,11 @@ class ReviewController extends Controller
      */
     public function fetchData(Request $request)
     {
-        // \Log::info($request);
+        \Log::info($request);
         // $businessId = Auth::user()->businessId
         $pctReviewed = $this->calculator->getReviewPercent($request->businessId);
         $averageRating = $this->calculator->getAverageRating($request->businessId);
-        $pastWeek = $this->calculator->getReviewsPastWeek($request->businessId);
+        $pastWeek = $this->calculator->getReviewsPastDays($request->businessId, 7);
 
         return response()->json([
             'pctReviewed' => $pctReviewed,

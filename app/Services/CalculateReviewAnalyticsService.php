@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TextMessage;
 use App\Models\SentMessage;
@@ -9,20 +10,26 @@ use App\Models\Review;
 
 class CalculateReviewAnalyticsService
 {
-    public function getReviewsPastWeek($businessId)
+    public function getReviewsPastDays(int $businessId, int $days)
     {
-        //
+        $reviewCount = Review::where('businessId', $businessId)->where('created_at', '>', now()->subDays($days)->endofDay())->count();
+        return $reviewCount;
+        // $users = DB::table("users")
+        //     ->select('id')
+        //     ->where('accounttype', 'standard')
+        //     ->where('created_at', '>', now()->subDays(30)->endOfDay())
+        //     ->all();
     }
 
     public function getAverageRating($businessId)
     {
-        // \Log::info("biz id:".$businessId)
+        \Log::info($businessId);
         $totalReviewCount = Review::where('businessId', $businessId)->count();
         $totalReviewCount = $totalReviewCount ? $totalReviewCount : 1;
         $ratings = intval(Review::where('businessId', $businessId)->sum('rating'));
 
         $average = number_format($ratings / ($totalReviewCount), 1);
-        // \Log::info($average);
+        \Log::info($average);
         return $average;
     }
 
@@ -36,9 +43,10 @@ class CalculateReviewAnalyticsService
             ->count();
         // if (!$reviewInviteCount)
         $percent = ($reviewInviteCount > 0) ? 100 * ($reviewCount / $reviewInviteCount) : 100;
-        // \Log::info($percent);
+        \Log::info($percent);
         return $percent;
     }
+
 
     public function getReviewRatingsCount($businessId)
     {
@@ -51,7 +59,7 @@ class CalculateReviewAnalyticsService
         $counts['fourStar'] = Review::where('businessId', $businessId)->where('rating', 4)->count();
         $counts['fiveStar'] = Review::where('businessId', $businessId)->where('rating', 5)->count();
 
-        // \Log::info($counts);
+        \Log::info($counts);
         return $counts;
     }
 

@@ -34,4 +34,9 @@ class Subscriber extends Model
         'phoneNumber',
         'businessId'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('subscribed', 1);
+    }
 }

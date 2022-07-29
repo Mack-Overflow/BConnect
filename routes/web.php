@@ -19,6 +19,7 @@ use App\Http\Controllers\{
     UploadRecordsController,
     TestEndpointController,
     ReviewController,
+    IncomingSmsController,
 };
 use App\Http\Controllers\Auth\{
     LoginController,
@@ -56,6 +57,14 @@ Route::get('/reviews/fetch-all/{businessId}', [ReviewController::class, 'fetchAl
 Route::post('/reviews/review-data', [ReviewController::class, 'fetchData']);
 Route::post('/reviews/store', [ReviewController::class, 'store']);
 
+// Redemptions
+Route::get('/redemptions/data/fetch-all/{businessId}', [RedemptionController::class, 'fetchAll']);
+
 // Handle Short URL links
 Route::get('/link/{shortUrl}', [LinkController::class, 'index']);
+
+// Twilio incoming webhooks
+Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+// Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+Route::post('/delivery-status', [IncomingSmsController::class, 'deliveryStatus']);
 

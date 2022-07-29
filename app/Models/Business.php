@@ -28,10 +28,18 @@ class Business extends Model
     protected $fillable = [
         'business_name',
         'package_tier',
+        'google_place_id',
+        'google_review_count_onboarding', // Total Google reviews when company registered
+        'total_google_review_count' // Total Google review count now
     ];
 
     public function users()
     {
         return $this->hasMany(User::class, 'businessId', 'id');
+    }
+
+    public function fetchReviewData()
+    {
+
     }
 }

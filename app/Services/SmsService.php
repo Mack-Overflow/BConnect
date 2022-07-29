@@ -16,10 +16,12 @@ class SmsService
 {
     // public Client $client;
     protected $genReview;
+    protected $client;
 
     public function __construct(GenerateReviewUrlService $gr)
     {
         $this->genReview = $gr;
+        // $this->client = $client;
     }
 
     /**
@@ -48,8 +50,8 @@ class SmsService
 
             if (getenv('APP_ENV') === 'local') $reviewerNo = "+14352224432";
 
-            // if($sendToTypes['Review Invite'])
             if ($sendToTypes === 'Review Invite' && $reviewerNo !== null) {
+                $sendToSubscriber = Subscriber::where(['phoneNumber' => $reviewerNo, 'businessId' => $businessId, 'subscribed' => 1])->firstOrFail();
 
                 $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo) : Url::where('fullUrl', $url)->get()->shortUrl;
 
@@ -64,6 +66,7 @@ class SmsService
                 ]);
                 
                 $sent->timesSent++;
+                $sent->save();
 
                 return response()->json(['message' => 'Review invite sent!']);
             } else if($sendToTypes === 'Review Invite' && $reviewerNo === null) {
@@ -76,8 +79,9 @@ class SmsService
             
             foreach($recipientNos as $recipientNo)
             {
+                if(!empty(Subscriber::where(['phoneNumber' => $reviewerNo, 'businessId' => $businessId, 'subscribed' => 1]))) continue;
                 // \Log::info("in loop");
-                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo) : Url::where('fullUrl', $url)->get()->shortUrl;
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $recipientNo) : Url::where('fullUrl', $url)->get()->shortUrl;
 
                 $client->messages->create($recipientNo, [
                     'from' => $twilio_num,
@@ -100,7 +104,7 @@ class SmsService
      */
     public static function getRecipients(mixed $sendToType) : array
     {
-        //
+        // if ($sendToType)
     }
 
 

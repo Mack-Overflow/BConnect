@@ -70,7 +70,7 @@ class CampaignController extends Controller
         $insertData = [
             'header' => $request->msgHeader,
             'body' => $request->msgBody,
-            'url' => 'https://'.$request->msgUrl,
+            'url' => $request->msgUrl,
             'businessId' => $request->businessId,
             'sendToType' => $request->sendToType,
             'promoCode' => $request->promoCode,
@@ -78,6 +78,7 @@ class CampaignController extends Controller
 
         $campaign->update($insertData);
         \Log::info($campaign);
+        return response()->json(['updated_campaign' => $campaign], 200);
     }
 
     /**

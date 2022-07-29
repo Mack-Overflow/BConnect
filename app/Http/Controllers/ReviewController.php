@@ -61,4 +61,23 @@ class ReviewController extends Controller
             'reviewsPastWeek' => $pastWeek 
         ], 200);
     }
+
+    /**
+     * Send a review Invite to phoneNumber
+     * @param $request
+     * @return response()->json()
+     */
+    public function send(Request $request)
+    {
+        try {
+            $subscriber = Subscriber::firstOrCreate(['phoneNumber' => $request->phoneNumber], [
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
+                'visitDate' => $request->visitDate,
+            ]);
+        } catch(\Exception $e) {
+            //
+        }
+        
+    }
 }

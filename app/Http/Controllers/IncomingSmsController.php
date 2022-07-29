@@ -61,9 +61,9 @@ class IncomingSmsController extends Controller
             "message" => 'The webhook has been created successfully',
             "data" => "Webhook URL is {$url}",
         ];
-        
+
         \Log::info($result);
-        return response()->json($result);
+        return response()->json(['message' => $result], 200);
     }
 
     // public function dispatchMessage($webhook, Twilio $twilio)

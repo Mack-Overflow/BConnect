@@ -52,14 +52,15 @@ class IncomingSmsController extends Controller
     {
         if (env('APP_ENV') === 'local') return response()->json(['message' => 'This method is not available in local development'], 400);
         // $this->validate($request, $this->rules());
+        \Log::info($request);
 
         // $webhook = Webhook::create($request->only(['title', 'message']));
 
-        $url = config('app.url')."/receive-sms/{$webhook->identifier}";
+        // $url = config('app.url')."/receive-sms/{$webhook->identifier}";
 
         $result = [
             "message" => 'The webhook has been created successfully',
-            "data" => "Webhook URL is {$url}",
+            // "data" => "Webhook URL is {$url}",
         ];
 
         \Log::info($result);

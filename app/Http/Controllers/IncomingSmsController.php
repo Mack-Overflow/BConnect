@@ -50,12 +50,12 @@ class IncomingSmsController extends Controller
      */
     public function receiveSms(Request $request)
     {
-        if (env('APP_ENV') === 'local') return repsonse()->json(['message' => 'This method is not available in local development'], 400);
+        if (env('APP_ENV') === 'local') return response()->json(['message' => 'This method is not available in local development'], 400);
         // $this->validate($request, $this->rules());
 
         // $webhook = Webhook::create($request->only(['title', 'message']));
 
-        // $url = config('app.url')."/receive-sms/{$webhook->identifier}";
+        $url = config('app.url')."/receive-sms/{$webhook->identifier}";
 
         $result = [
             "message" => 'The webhook has been created successfully',

@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     TestEndpointController,
     ReviewController,
     IncomingSmsController,
+    RedemptionController,
 };
 use App\Http\Controllers\Auth\{
     LoginController,

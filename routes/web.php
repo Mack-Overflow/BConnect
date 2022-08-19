@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use Twilio\Twiml;
+use Illuminate\Http\Request;
 use App\Http\Controllers\{
     CampaignController,
     SmsController,
@@ -21,6 +22,7 @@ use App\Http\Controllers\{
     ReviewController,
     IncomingSmsController,
     RedemptionController,
+    LinkController,
 };
 use App\Http\Controllers\Auth\{
     LoginController,
@@ -65,7 +67,13 @@ Route::get('/redemptions/data/fetch-all/{businessId}', [RedemptionController::cl
 Route::get('/link/{shortUrl}', [LinkController::class, 'index']);
 
 // Twilio incoming webhooks
-Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+Route::get('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+// Route::get('/receive-sms', function (Request $request) {
+//     \Log::info($request);
+//     // $res = new Twiml();
+//     // $res->sms("This is it!");
+//     return response()->json(['message' => 'coming soon'], 200);
+// });
 // Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
 Route::post('/delivery-status', [IncomingSmsController::class, 'deliveryStatus']);
 

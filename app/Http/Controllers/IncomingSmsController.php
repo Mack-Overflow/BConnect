@@ -50,21 +50,23 @@ class IncomingSmsController extends Controller
      */
     public function receiveSms(Request $request)
     {
-        if (env('APP_ENV') === 'local') return response()->json(['message' => 'This method is not available in local development'], 400);
+        // if (env('APP_ENV') === 'local') return response()->json(['message' => 'This method is not available in local development'], 400);
         // $this->validate($request, $this->rules());
+        \Log::info("Incoming SMS\n");
         \Log::info($request);
+        $phoneNo = $request['From'];
 
-        // $webhook = Webhook::create($request->only(['title', 'message']));
+        $fromSubscriber = Subscriber::where('phoneNumber', $phoneNo)->first();
 
-        // $url = config('app.url')."/receive-sms/{$webhook->identifier}";
+        // Handle received review invite response if the last message sent to the subscriber was a review invite
+        // $rating = ($fromSubscriber->lastMsgSentType === 'Review Invite' && is_int($request['Body'])) ? trim($request['Body'], " \n\t\v\x00") : null;
+        // if (is_null($rating)) OptInOutService::handleResponse($request, $fromSubscriber);
+        OptInOutService::handleResponse($request, $fromSubscriber);
+        // \Log::info($rating);
+        // if (in_array($rating, ['1', '2', '3', '4', '5'])) 
+        
 
-        $result = [
-            "message" => 'The webhook has been created successfully',
-            // "data" => "Webhook URL is {$url}",
-        ];
-
-        \Log::info($result);
-        return response()->json(['message' => $result], 200);
+        return response()->json(["message" => "Received message from $phoneNo"], 200);
     }
 
     // public function dispatchMessage($webhook, Twilio $twilio)

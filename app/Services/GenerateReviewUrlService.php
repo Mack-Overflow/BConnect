@@ -28,7 +28,7 @@ class GenerateReviewUrlService
                 $output_url .= $base_62[$randomIndex];
             }
             $extension = substr($output_url, -7);
-            $final_url = (getenv('APP_ENV') === 'staging') ? "https://client.bconnect-staging.com/link/".$extension : "localhost:3000/link/".$extension;
+            $final_url = (getenv('APP_ENV') === 'staging') ? "https://client.bconnect-staging.com/link/".$extension : "http://localhost:3000/link/".$extension;
 
             // the conditional below is where we will want to optimize DB performance
             // and potentially use clustering to run in parallel

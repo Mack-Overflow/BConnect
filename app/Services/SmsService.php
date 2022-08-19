@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SendToType;
+use Illuminate\Support\Facades\Log;
 use App\Models\Url;
 use App\Models\Subscriber;
 use App\Models\SentMessage;
@@ -37,6 +38,18 @@ class SmsService
      */
     public static function send(string $header, string $body, mixed $sendToTypes, string $url, int $businessId, string $reviewerNo=null)
     {
+        $shortUrlLink = "";
+
+        // Get the link url depending on the environment
+        if (getenv('APP_ENV') === 'local') {
+            $reviewerNo = "+14352224432";
+            $shortUrlLink = "http://localhost:8080/link";
+        } else if (getenv('APP_ENV') === 'staging') {
+            $shortUrlLink = "https://api.bconnect-staging.com/link/";
+        } else if (getenv('APP_ENV') === 'production') {
+            $shortUrlLink = "https://api.bconnect.com/link";
+        }
+
         try {
             // Get Twilio keys
             $account_id = getenv('TWILIO_SID');
@@ -46,19 +59,19 @@ class SmsService
             $client = new Client($account_id, $auth_tok);
 
             // Handle retrieving #'s from sendToType
-            // \Log::info($sendToTypes);
-
-            if (getenv('APP_ENV') === 'local') $reviewerNo = "+14352224432";
+            
+            
 
             if ($sendToTypes === 'Review Invite' && $reviewerNo !== null) {
                 $sendToSubscriber = Subscriber::where(['phoneNumber' => $reviewerNo, 'businessId' => $businessId, 'subscribed' => 1])->firstOrFail();
 
-                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo) : Url::where('fullUrl', $url)->get()->shortUrl;
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo, $businessId) : Url::where('fullUrl', $url)->get()->shortUrl;
 
                 $client->messages->create($reviewerNo, [
                     'from' => $twilio_num,
                     'body' => "$header \n $body \n $shortUrl" 
                 ]);
+                $sendToSubscriber->lastMsgSentType = 'Review Invite';
 
                 $sent = SentMessage::firstOrCreate([
                     'businessId' => $businessId,
@@ -66,6 +79,7 @@ class SmsService
                 ]);
                 
                 $sent->timesSent++;
+                $sendToSubscriber->save();
                 $sent->save();
 
                 return response()->json(['message' => 'Review invite sent!']);
@@ -76,17 +90,24 @@ class SmsService
             // (getenv('APP_ENV') === 'local') ? $recipientNos = ["+14352224432"] : self::getRecipients($sendToTypes);
             $recipientNos = (getenv('APP_ENV') === 'local') ? ["+14352224432"] : null;
             if ($recipientNos === null) return;
+            Log::info($recipientNos);
             
             foreach($recipientNos as $recipientNo)
             {
-                if(!empty(Subscriber::where(['phoneNumber' => $reviewerNo, 'businessId' => $businessId, 'subscribed' => 1]))) continue;
-                // \Log::info("in loop");
-                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $recipientNo) : Url::where('fullUrl', $url)->get()->shortUrl;
-
+                // If a short Url already exists, retrieve it using the fullUrl
+                // Or else, create a new Url model
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $recipientNo, $businessId) : Url::where(['fullUrl' => $url, 'businessId' => $businessId])->first()->shortUrl;
+                Log::info($shortUrl);
+                Log::info($recipientNo);
                 $client->messages->create($recipientNo, [
                     'from' => $twilio_num,
-                    'body' => $header.'\n\n'.$body.'\n'.$shortUrl
+                    'body' => "$header \n\n $body \n $shortUrlLink$shortUrl"
                 ]);
+
+                // Increments sentMessageCount of recipient (if successful)
+                $updateSubscriber = Subscriber::find($recipientNo);
+                $updateSubscriber->sentMessage();
+                $updateSubscriber->lastMsgSentType = $sendToTypes;
             }
             
 
@@ -151,18 +172,18 @@ class SmsService
      * 
      * @return String $shortUrl
      */
-    private static function handleNewUrl(string $fullUrl, $customerPhoneNo) : String
+    private static function handleNewUrl(string $fullUrl, string $customerPhoneNo, int $businessId) : String
     {
         $shortUrl = GenerateReviewUrlService::generate();
         // $shortUrl = $this->genReview->generate(); // Generate new Short URL
-        $subscriber = json_decode(Subscriber::where('phoneNumber', $customerPhoneNo)->get());
-        \Log::info($subscriber);
-        $subscriberId = $subscriber[0]->id;
-        \Log::info($subscriberId);
+        $subscriber = json_decode(Subscriber::where(['phoneNumber' => $customerPhoneNo, 'businessId' => $businessId])->get())[0];
+        // Log::info($subscriber);
+        $subscriberId = $subscriber->id;
+        Log::info($subscriberId);
 
         Url::create([
-            'businessId' => \Auth::user()->businessId,
-            'subscriberId' => $subscriberId,
+            'businessId' => $businessId,
+            'subscriberId' => $subscriber->id,
             'fullUrl' => $fullUrl,
             'shortUrl' => $shortUrl,
         ]);

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('text_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('businessId')->references('id')->on('businesses')->default(0);
+            $table->foreignId('businessId')->references('id')->on('businesses')->onDelete('cascade')->default(0);
             $table->text('header')->nullable();
             $table->text('body');
             $table->string('url')->nullable();
@@ -32,6 +33,8 @@ return new class extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('text_messages');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,9 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('business_name');
             $table->string('package_tier');
-            $table->unsignedBigInteger('manager_id');
-            $table->unsignedBigInteger('google_place_id');
-            $table->foreign('manager_id')->references('users')->on('id');
+            $table->string('google_place_id');
+            // $table->foreignId('manager_id')->references('id')->on('users')->onDelete('cascade')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +31,8 @@ return new class extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('businesses');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 };

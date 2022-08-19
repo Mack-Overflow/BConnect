@@ -33,9 +33,22 @@ class Business extends Model
         'total_google_review_count' // Total Google review count now
     ];
 
+    public static function find(int $id)
+    {
+        return Business::where('id', $id)->first();
+    }
+
     public function users()
     {
         return $this->hasMany(User::class, 'businessId', 'id');
+    }
+
+    /**
+     * 
+     */
+    public function totalMessagesSent()
+    {
+        // return count($this->sub)
     }
 
     public function fetchReviewData()

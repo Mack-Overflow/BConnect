@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\{
+//     IncomingSmsController,
+// };
 use App\Http\Controllers\Auth\{
     LoginController,
     LogoutController,
@@ -39,3 +42,8 @@ Route::get('register', function(Request $request) {
 Route::get('get-user', function() {
     return 'api guard';
 });
+
+// Twilio incoming webhooks
+// Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+// Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
+// Route::post('/delivery-status', [IncomingSmsController::class, 'deliveryStatus']);

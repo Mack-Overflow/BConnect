@@ -70,7 +70,7 @@ class CampaignController extends Controller
         $insertData = [
             'header' => $request->msgHeader,
             'body' => $request->msgBody,
-            'url' => $request->msgUrl,
+            'url' => 'https://'.$request->msgUrl,
             'businessId' => $request->businessId,
             'sendToType' => $request->sendToType,
             'promoCode' => $request->promoCode,

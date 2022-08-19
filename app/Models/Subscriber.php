@@ -32,11 +32,23 @@ class Subscriber extends Model
         'lastName',
         'visitDate',
         'phoneNumber',
-        'businessId'
+        'businessId',
+        'googleReviewLinksClicked',
+        'lastMsgSentType', // To check if last message sent was review invite for Subscriber
     ];
 
     public function scopeActive($query)
     {
         return $query->where('subscribed', 1);
+    }
+
+    /**
+     * Increments messagesReceived count of instance
+     */
+    public function sentMessage()
+    {
+        $this->messagesReceived++;
+        $this->save();
+        return $this->messagesReceived;
     }
 }

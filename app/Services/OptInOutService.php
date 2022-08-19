@@ -1,11 +1,100 @@
 <?php
 
+namespace App\Services;
+
+use Illuminate\Http\Request;
+use App\Models\Business;
+use App\Models\Subscriber;
+use App\Models\Review;
+use App\Services\SmsService;
+use Twilio\TwiML\MessagingResponse;
+
 class OptInOutService
 {
     /**
      * Data processing for IncomingSmsController 
      * 
      */
+    public static function handleResponse(Request $request, Subscriber $subscriber) 
+    {
+        // \Log::info($request['Body']);
+
+        $body = trim(strToLower($request['Body'])); // Get Message Body from Request
+
+        $isValid = self::isValidCommand($body); // Is the response a valid command ?
+        // if (!$isValid) return "Error: Invalid command"; // Return Twiml error message
+        if (!$isValid) \Log::info('Error: Invalid command');
+        // Valid command and last message sent to the subscriber is Review Invite
+        $rating = ($subscriber->lastMsgSentType === 'Review Invite') ? self::isRating($body) : null; // Is the body a rating ?
+        
+        // if (!self::isValidCommand($body)) return response()->json(['err])
+        \Log::info($subscriber->subscribed);
+        if ($rating) self::handleRating($subscriber, $rating);
+
+        // Command is valid but is not a rating, handle subscribe, unsubscribe, or resubscribe
+        if (!$rating) self::handleAction($subscriber, $body);
+    }
+
+    /**
+     * Handle rating, save as review
+     * @param Subscriber $subscriber
+     * @param int $rating
+     */
+    public static function handleRating(Subscriber $subscriber, int $rating)
+    {
+        $customerName = $subscriber->firstName.' '.$subscriber->lastName;
+        $associatedBusiness = Business::find($subscriber->businessId);
+
+        // Store rating with no review body
+        $review = Review::create([
+            'rating' => $rating, 
+            'customerName' => $customerName, 
+            'businessId' => $subscriber->businessId
+        ]);
+
+        // If rating is 5, send Google review link directly to customer
+        // Otherwise, send internal review link to customer
+        if ($rating === 5) {
+            SmsService::send(
+                'Leave us a review on Google!', 
+                'We would love you to share your experience with others. Visit the link below to leave us a google review',
+                'Google Review Invite',
+                'http://www.search.google.com/local/writereview?placeid='.$associatedBusiness->google_place_id,
+                $associatedBusiness->id,
+                $subscriber->phoneNumber
+            );
+        }
+        // SMS Service -> send() : Params
+        // Please take a moment to leave us a review on Google
+    }
+
+    public static function handleAction(Subscriber $subscriber, string $command)
+    {
+        switch (true) {
+            case ($command === 'start' || $command === 'unstop' || $command === 'join' || $command === 'yes'):
+                $msg = "You are now subscribed. Text STOP to quit";
+                $subscriber->subscribed = 1;
+                break;
+            case ($command === 'stop' || $command === 'unjoin' || $command === 'end' || $command === 'stopall' || $command === 'unsubscribe'):
+                $subscriber->subscribed = - 1;
+                $msg = "You are now unsubscribed. You can text JOIN at any time to resubscribe";
+                break;
+        }
+        \Log::info($msg);
+        try {
+            $subscriber->save();
+            \Log::info(Subscriber::find($subscriber->phoneNumber));
+            return response()->json(['message' => $msg], 200);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['error' => 'Unable to process command']);
+        }
+    }
+
+    // public static function helloWorld(mixed $message)
+    // {
+    //     return "Message: ".$message;
+    // }
 
 
     public static function generateOutputMessage($subscriber, $message)
@@ -26,24 +115,17 @@ class OptInOutService
             : self::messageText('stop');
     }
 
+    public static function isRating(string $body)
+    {
+        $rating = is_int(trim(strToLower($body))) ? intval(trim($body)) : null;
+        return $rating;
+    }
+
     public static function isValidCommand($command)
     {
-        return starts_with($command, 'join') || starts_with($command, 'stop');
-    }
-    
-    public static function messageText($messageType = 'unknown') {
-        switch($messageType) {
-            case 'join':
-                return "Thank you for subscribing to notifications!";
-                break;
-            case 'stop':
-                return "The number you texted from will no longer receive notifications. 
-            To start receiving notifications again, please text 'join'.";
-                break;
-            default:
-                return "I'm sorry, that's not an option I recognize. 
-            Please, let me know if I should 'join' or 'stop' this number from notifications.";
-                break;
-        }
+        $valid_arr = [
+            1, 2, 3, 4, 5, 'start', 'unstop', 'join', 'yes', 'stop', 'unjoin', 'quit', 'end', 'stopall', 'unsubscribe'
+        ];
+        return in_array($command, $valid_arr);
     }
 }

@@ -43,11 +43,12 @@ class SmsService
         // Get the link url depending on the environment
         if (getenv('APP_ENV') === 'local') {
             $reviewerNo = "+14352224432";
-            $shortUrlLink = "http://localhost:8080/link";
+            // Replace with Ngrok
+            $shortUrlLink = getenv("NGROK_URL");
         } else if (getenv('APP_ENV') === 'staging') {
             $shortUrlLink = "https://api.bconnect-staging.com/link/";
         } else if (getenv('APP_ENV') === 'production') {
-            $shortUrlLink = "https://api.bconnect.com/link";
+            $shortUrlLink = "https://api.bconnect.com/link/";
         }
 
         try {

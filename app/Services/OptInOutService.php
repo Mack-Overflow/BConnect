@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Business;
 use App\Models\Subscriber;
@@ -45,6 +46,8 @@ class OptInOutService
         $customerName = $subscriber->firstName.' '.$subscriber->lastName;
         $associatedBusiness = Business::find($subscriber->businessId);
 
+        // Handle overloading ratings
+
         // Store rating with no review body
         $review = Review::create([
             'rating' => $rating, 
@@ -59,7 +62,21 @@ class OptInOutService
                 'Leave us a review on Google!', 
                 'We would love you to share your experience with others. Visit the link below to leave us a google review',
                 'Google Review Invite',
-                'http://www.search.google.com/local/writereview?placeid='.$associatedBusiness->google_place_id,
+                'https://search.google.com/local/writereview?placeid='.$associatedBusiness->google_place_id,
+                $associatedBusiness->id,
+                $subscriber->phoneNumber
+            );
+        } else {
+            if (getenv('APP_ENV') === 'staging') {
+                $link = 'https://client.bconnect-staging.com/create-review';
+            } else if (getenv('APP_ENV') === 'local') {
+                $link = getenv('NGROK_URL').'/create-review';
+            }
+            // Production Link
+            SmsService::send(
+                'Leave us a review',
+                'We would love you to share your experience with others. Visit the link below to leave us a review',
+                $link,
                 $associatedBusiness->id,
                 $subscriber->phoneNumber
             );
@@ -117,7 +134,9 @@ class OptInOutService
 
     public static function isRating(string $body)
     {
-        $rating = is_int(trim(strToLower($body))) ? intval(trim($body)) : null;
+        Log::info($body);
+        $rating = (intval(trim($body)) > 0) ? intval(trim($body)) : null;
+        Log::info($rating);
         return $rating;
     }
 

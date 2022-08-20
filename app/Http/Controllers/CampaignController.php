@@ -93,8 +93,9 @@ class CampaignController extends Controller
         $sendToTypes = $request->sendToType;
         $url = $request->url;
         $body = $request->body;
+        $businessId = $request->businessId;
         // $promoCode = $request->promoCode;
 
-        return $this->smsService->send($header, $body, $sendToTypes, $url);
+        return $this->smsService->send($header, $body, $sendToTypes, $url, $businessId);
     }
 }

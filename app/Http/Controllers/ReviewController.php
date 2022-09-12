@@ -37,6 +37,7 @@ class ReviewController extends Controller
         $reviews = ['reviews' => Review::where('businessId', $businessId)->take(25)->get()];
 
         $reviews['counts'] = $this->calculator->getReviewRatingsCount($businessId);
+        
         // $reviews->countByRating = $this->calculator()->getCountByRating($businessId);
 
         // $reviews->averageRating = $this->calculator()->getAverageRating($businessId);

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
@@ -28,11 +31,37 @@ class LoginController extends Controller
             throw new AuthenticationException();
         }
         $request->session()->regenerate();
-        \Log::info(\Auth::user());
+        Log::info(Auth::user());
         // Include necessary user data in Json response
         return response()->json(['message' => 'Logged In!', 'user_data' => auth()->user()], 201);
     }
 
+    /**
+     * Endpoint: POST /api/login
+     * @param Request $request
+     * 
+     * @return response()->json()
+     */
+    public function apiLogin(Request $request) : JsonResponse
+    {
+        if (!auth()->attempt($request->only('email', 'password')))
+        {
+            throw new AuthenticationException();
+        }
+
+        $request->session()->regenerate();
+        $token = Auth::user()->createToken($request->email, ['abilities:fetch-data'])->plainTextToken;
+        Log::info(Auth::user());
+
+        // Include necessary user data in Json response,
+        // Issues API Token to be used as bearer token in Authorization headers
+        return response()->json(['message' => 'Logged In!', 'token' => $token], 201);
+    }
+
+
+
+
+    
     // private function authenticateFrontend()
     // {
     //     if (!Auth::guard('web')

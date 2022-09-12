@@ -22,6 +22,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('google:cron')
             ->weekly();
+            
+        $schedule->command('sanctum:prune-expired --hours=24')->daily();
     }
 
     /**

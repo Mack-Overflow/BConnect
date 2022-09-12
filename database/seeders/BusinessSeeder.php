@@ -16,8 +16,8 @@ class BusinessSeeder extends Seeder
     public function run()
     {
         Business::firstOrCreate([
-            'business_name' => 'Bconnect Dev',
-            'google_place_id' => 'ChIJwWJZjhLwsgIRWC4gaAJyfSM'
+                'business_name' => 'Bconnect Dev',
+                'google_place_id' => 'ChIJwWJZjhLwsgIRWC4gaAJyfSM'
             ],
             [
                 // 'manager_id' => 1,

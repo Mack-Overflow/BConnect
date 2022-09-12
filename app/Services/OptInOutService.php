@@ -67,10 +67,11 @@ class OptInOutService
                 $subscriber->phoneNumber
             );
         } else {
-            if (getenv('APP_ENV') === 'staging') {
+            if (getenv('APP_ENV') === 'production') { 
+                // To be changed to use business domain name
                 $link = 'https://client.bconnect-staging.com/create-review';
-            } else if (getenv('APP_ENV') === 'local') {
-                $link = getenv('NGROK_URL').'/create-review';
+            } else {
+                $link = 'https://client.bconnect-staging.com/create-review';
             }
             // Production Link
             SmsService::send(

@@ -53,11 +53,11 @@ class CalculateReviewAnalyticsService
         // $totalCount = 
         $counts = ['totalCount' => Review::where('businessId', $businessId)->count()];
         
-        $counts['oneStar'] = Review::where('businessId', $businessId)->where('rating', 1)->count();
-        $counts['twoStar'] = Review::where('businessId', $businessId)->where('rating', 2)->count();
-        $counts['threeStar'] = Review::where('businessId', $businessId)->where('rating', 3)->count();
-        $counts['fourStar'] = Review::where('businessId', $businessId)->where('rating', 4)->count();
-        $counts['fiveStar'] = Review::where('businessId', $businessId)->where('rating', 5)->count();
+        $counts['oneStar'] = ['oneStar', Review::where('businessId', $businessId)->where('rating', 1)->count()];
+        $counts['twoStar'] = ['twoStar', Review::where('businessId', $businessId)->where('rating', 2)->count()];
+        $counts['threeStar'] = ['threeStar', Review::where('businessId', $businessId)->where('rating', 3)->count()];
+        $counts['fourStar'] = ['fourStar', Review::where('businessId', $businessId)->where('rating', 4)->count()];
+        $counts['fiveStar'] = ['fiveStar', Review::where('businessId', $businessId)->where('rating', 5)->count()];
 
         \Log::info($counts);
         return $counts;

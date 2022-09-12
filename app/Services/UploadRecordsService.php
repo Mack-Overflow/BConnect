@@ -121,7 +121,8 @@ class UploadRecordsService
                     'lastName' => $lname,
                     'visitDate'  => $date,
                     'phoneNumber' => $phoneNo,
-                    'businessId' => $businessId
+                    'businessId' => $businessId,
+                    
                 ];
 
                 $subscriber = Subscriber::firstOrCreate($insertData);

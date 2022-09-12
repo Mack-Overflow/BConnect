@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 use Twilio\Twiml;
 use Illuminate\Http\Request;
 use App\Http\Controllers\{
+    BusinessController,
     CampaignController,
     SmsController,
     UploadRecordsController,
@@ -23,6 +24,7 @@ use App\Http\Controllers\{
     IncomingSmsController,
     RedemptionController,
     LinkController,
+    SubscriberController,
 };
 use App\Http\Controllers\Auth\{
     LoginController,
@@ -53,6 +55,7 @@ Route::post('/update-campaign', [CampaignController::class, 'update']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
 Route::post('/fetch-campaigns', [CampaignController::class, 'fetch']);
+Route::get('/fetch-sendToTypes/{businessId}', [CampaignController::class, 'fetchTypes']);
 
 // Reviews
 Route::get('/reviews/fetch/{businessId}/{reviewId}', [ReviewController::class, 'fetchReview']);
@@ -77,3 +80,26 @@ Route::get('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
 // Route::post('/receive-sms', [IncomingSmsController::class, 'receiveSms']);
 Route::post('/delivery-status', [IncomingSmsController::class, 'deliveryStatus']);
 
+
+// ----------- A P I  S P E C I F I C  R O U T E S -------------------------------
+// Ensure before login that following pre-request script is added: 
+// pm.sendRequest({
+//     url: pm.environment.get('APP_URL') + 'sanctum/csEBrf-cookie',
+//     method: 'GET'
+// }, function (error, response, { cookies }) {
+//     if (!error) {
+//         pm.environment.set('XSRF_TOKEN', cookies.get('XSRF-TOKEN'))
+//     }
+// })
+// Retrieve API Token
+// Route::post('/api/login', [LoginController::class, 'apiLogin']);
+Route::post('/api/login', [LoginController::class, 'apiLogin']);
+
+
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    // phoneNumber i.e "+18001012222"
+    Route::get('/api/fetch-subscriber/{phoneNumber}', [SubscriberController::class, 'retrieve']);
+    // businessName i.e. "Bconnect%20Dev"
+    Route::get('/api/fetch-business/{businessName}', [BusinessController::class, 'fetchOne']);
+    Route::put('/api/send-text', [CampaignController::class, 'send']);
+});

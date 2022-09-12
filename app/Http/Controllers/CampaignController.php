@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\SendToType;
 use App\Models\TextMessage;
 use App\Services\SmsService;
 use App\Http\Requests\SendCampaignRequest;
@@ -17,7 +18,7 @@ class CampaignController extends Controller
     }
     
     /**
-     * Endpoint: /fetch-campaigns
+     * Endpoint: POST /fetch-campaigns
      */
     public function fetch(Request $request)
     {
@@ -26,6 +27,22 @@ class CampaignController extends Controller
         $campaigns = TextMessage::where('businessId', $biz_id)->get();
         // \Log::info($campaigns);
         return response()->json(['campaigns' => $campaigns], 201);
+    }
+
+    /**
+     * Endpoint: GET /fetch-sendToTypes
+     */
+    public function fetchTypes(Request $request)
+    {
+        \Log::info($request->businessId);
+        try {
+            $types = SendToType::get()->toArray();
+            \Log::info($types);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+        return response()->json(['types' => $types], 201);
     }
 
     /**
@@ -38,7 +55,7 @@ class CampaignController extends Controller
         $insertData = [
             'header' => $request->msgHeader,
             'body' => $request->msgBody,
-            'url' => 'https://'.$request->msgUrl,
+            'url' => $request->msgUrl,
             'businessId' => $request->businessId,
             'sendToType' => $request->sendToType,
             'promoCode' => $request->promoCode,
@@ -70,8 +87,8 @@ class CampaignController extends Controller
         $insertData = [
             'header' => $request->msgHeader,
             'body' => $request->msgBody,
-            'url' => 'https://'.$request->msgUrl,
-            'businessId' => $request->businessId,
+            'url' => $request->msgUrl,
+            'businessId' => $bizId,
             'sendToType' => $request->sendToType,
             'promoCode' => $request->promoCode,
         ];
@@ -86,9 +103,13 @@ class CampaignController extends Controller
      */
     public function send(SendCampaignRequest $request)
     {
+        // \Log::info($request->user()->accessToken);
+        // $works = $request->user()->tokenCan('abilities:send-data');
+        // $token = $request->bearerToken();
+        // // $token->
+        // return response()->json(['message' => 'hit endpoint', 'works' => $works, 'token' => $token]);
         // $msgToSend = $request->message;
-
-        $message = $request->body;
+        \Log::info($request);
         $header = $request->header;
         $sendToTypes = $request->sendToType;
         $url = $request->url;

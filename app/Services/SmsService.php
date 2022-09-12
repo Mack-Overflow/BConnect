@@ -38,6 +38,7 @@ class SmsService
      */
     public static function send(string $header, string $body, mixed $sendToTypes, string $url, int $businessId, string $reviewerNo=null)
     {
+        Log::info("sending");
         $shortUrlLink = "";
 
         // Get the link url depending on the environment
@@ -64,17 +65,19 @@ class SmsService
             
 
             if ($sendToTypes === 'Review Invite' && $reviewerNo !== null) {
+                Log::info("send block");
                 $sendToSubscriber = Subscriber::where(['phoneNumber' => $reviewerNo, 'businessId' => $businessId, 'subscribed' => 1])->firstOrFail();
 
-                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo, $businessId) : Url::where('fullUrl', $url)->get()->shortUrl;
+                $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $reviewerNo, $businessId) : Url::where('fullUrl', $url)->first()->shortUrl;
 
                 $client->messages->create($reviewerNo, [
                     'from' => $twilio_num,
-                    'body' => "$header \n $body \n $shortUrl" 
+                    'body' => "$header \n\n $body \n $shortUrl" 
                 ]);
                 $sendToSubscriber->lastMsgSentType = 'Review Invite';
 
                 $sent = SentMessage::firstOrCreate([
+                    // 'textMessage' => 
                     'businessId' => $businessId,
                     'sendToType' => $sendToTypes,
                 ]);
@@ -87,6 +90,9 @@ class SmsService
             } else if($sendToTypes === 'Review Invite' && $reviewerNo === null) {
                 return response()->json(['error' => 'No recipient phone number provided for reviewer'], 400);
             }
+            // else { // handles all other sendToTypes
+                // self::getRecipients($sendToTypes, $businessId);
+            // }
 
             // (getenv('APP_ENV') === 'local') ? $recipientNos = ["+14352224432"] : self::getRecipients($sendToTypes);
             $recipientNos = (getenv('APP_ENV') === 'local') ? ["+14352224432"] : null;
@@ -124,9 +130,38 @@ class SmsService
      * 
      * @return array of recipient phone no.s to be iterated in send method
      */
-    public static function getRecipients(mixed $sendToType) : array
+    public static function getRecipients(mixed $sendToType, int $businessId) : array
     {
-        // if ($sendToType)
+        $recipients = [];
+        if ($sendToType === 'Uncontacted')
+        { // Previously uncontacted, uploaded subscribers
+            $recipients = Subscriber::where([
+                    'businessId' => $businessId,
+                    'lastMsgSentType' => $sendToType
+                ])
+                ->get()
+                ->toArray();
+        }
+        else if ($sendToType === 'Opt-In Invite')
+        {
+            $recipients = Subscriber::where([
+                'businessId' => $businessId,
+                'subscribed' => 0
+            ])
+            ->get()
+            ->toArray();
+        }
+        else if ($sendToType === 'Have Redeemed')
+
+        return $recipients;
+    }
+
+    /**
+     * 
+     */
+    public function sendMultiple()
+    {
+
     }
 
 

@@ -16,7 +16,7 @@ class SmsController extends Controller
         $this->smsService = $smsService;
     }
 
-    public static function index(Request $request)
+    public function index(Request $request)
     {
         $message = $request->body;
         $header = $request->header;

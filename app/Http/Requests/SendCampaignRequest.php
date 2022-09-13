@@ -24,12 +24,7 @@ class SendCampaignRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'message' => ['required']
-            // 'id' => ['required', 
-            'body' => 'required|string|max:255',
-            'sendToType' => 'required|string|max:255',
-            'url' => 'required|string|max:255',
-            'header' => 'required|string|max:255'
+            'campaignId' => 'required'
         ];
     }
 }

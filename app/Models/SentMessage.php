@@ -19,6 +19,7 @@ class SentMessage extends Model
 
     protected $fillable = [
         'businessId',
-        'textMessageId'
+        'textMessageId',
+        'sendToType'
     ];
 }

@@ -50,7 +50,7 @@ Route::get('/get-user', [TestEndpointController::class, 'getUser']);
 Route::get('sendSMS', [SmsController::class, 'index']);
 Route::post('uploadRecords', [UploadRecordsController:: class, 'upload']);
 Route::post('/createCampaign', [CampaignController::class, 'create']);
-Route::post('/send-campaign', [CampaignController::class, 'send']);
+Route::put('/send-campaign', [CampaignController::class, 'send']);
 Route::post('/update-campaign', [CampaignController::class, 'update']);
 
 Route::post('/fetch-subscribers', [UploadRecordsController::class, 'fetch']);
@@ -101,5 +101,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/api/fetch-subscriber/{phoneNumber}', [SubscriberController::class, 'retrieve']);
     // businessName i.e. "Bconnect%20Dev"
     Route::get('/api/fetch-business/{businessName}', [BusinessController::class, 'fetchOne']);
+    // Needs Campaign ID, ideal for reminder text
     Route::put('/api/send-text', [CampaignController::class, 'send']);
+    // Route::post('/api/create-text', [CampaignController::class, 'create']);
 });

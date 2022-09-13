@@ -103,20 +103,19 @@ class CampaignController extends Controller
      */
     public function send(SendCampaignRequest $request)
     {
-        // \Log::info($request->user()->accessToken);
-        // $works = $request->user()->tokenCan('abilities:send-data');
-        // $token = $request->bearerToken();
-        // // $token->
-        // return response()->json(['message' => 'hit endpoint', 'works' => $works, 'token' => $token]);
-        // $msgToSend = $request->message;
+        // Replace fields with campaignId that can be read in send method
+
+        // $textId = $request->campaignId
         \Log::info($request);
-        $header = $request->header;
-        $sendToTypes = $request->sendToType;
-        $url = $request->url;
-        $body = $request->body;
-        $businessId = $request->businessId;
+        $campId = $request->campaignId;
+        // $header = $request->header;
+        // $sendToTypes = $request->sendToType;
+        // $url = $request->url;
+        // $body = $request->body;
+        // $businessId = $request->businessId;
         // $promoCode = $request->promoCode;
 
-        return $this->smsService->send($header, $body, $sendToTypes, $url, $businessId);
+        return $this->smsService->send($campId);
+        // return $this->smsService->send($textId);
     }
 }

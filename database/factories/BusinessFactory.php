@@ -15,6 +15,8 @@ class BusinessFactory extends Factory
      */
     protected $model = Business::class;
 
+    protected $package_tiers = ['Basic', 'Standard', 'Premium', 'Executive', 'Platinum'];
+
     /**
      * Define the model's default state.
      *
@@ -23,7 +25,11 @@ class BusinessFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'business_name' => $this->faker->company,
+            'package_tier' => $this->package_tiers[array_rand($this->package_tiers)],
+            'google_place_id',
+            'google_review_count_onboarding', // Total Google reviews when company registered
+            'total_google_review_count' // Total Google review count now
         ];
     }
 }

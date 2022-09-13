@@ -22,7 +22,7 @@ class SmsController extends Controller
         $header = $request->header;
         $sendToType = $request->sendToType;
 
-        $this->smsService->send($header, $message, $sendToType);
+        // $this->smsService->send($header, $message, $sendToType);
     }
         
     // public function send(Request $request)

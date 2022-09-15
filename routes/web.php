@@ -103,5 +103,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/api/fetch-business/{businessName}', [BusinessController::class, 'fetchOne']);
     // Needs Campaign ID, ideal for reminder text
     Route::put('/api/send-text', [CampaignController::class, 'send']);
-    // Route::post('/api/create-text', [CampaignController::class, 'create']);
+    // Required fields: msgHeader, msgBody, msgUrl, businessId, sendToType. Optional: promoCode
+    Route::post('/api/create-text', [CampaignController::class, 'create']);
 });

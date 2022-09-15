@@ -27,9 +27,9 @@ class BusinessFactory extends Factory
         return [
             'business_name' => $this->faker->company,
             'package_tier' => $this->package_tiers[array_rand($this->package_tiers)],
-            'google_place_id',
-            'google_review_count_onboarding', // Total Google reviews when company registered
-            'total_google_review_count' // Total Google review count now
+            'google_place_id' => 'n/a',
+            'google_review_count_onboarding' => rand(100,200), // Total Google reviews when company registered
+            'total_google_review_count' => rand(200, 1000)// Total Google review count now
         ];
     }
 }

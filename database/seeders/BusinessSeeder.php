@@ -25,6 +25,6 @@ class BusinessSeeder extends Seeder
                 // 'google_review_count_onboarding' => 0,
                 // 'total_google_review_count' => 0
         ]);
-        // Business::factory()->times(5)->create();
+        Business::factory()->times(10)->create();
     }
 }

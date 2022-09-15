@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('business_name');
             $table->string('package_tier');
             $table->string('google_place_id');
+            // $table->string(')
             // $table->foreignId('manager_id')->references('id')->on('users')->onDelete('cascade')->default(0);
             $table->timestamps();
         });

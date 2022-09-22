@@ -106,8 +106,9 @@ class CampaignController extends Controller
         // Replace fields with campaignId that can be read in send method
 
         // $textId = $request->campaignId
-        \Log::info($request);
+        // \Log::info($request);
         $campId = $request->campaignId;
+        return null;
         // $header = $request->header;
         // $sendToTypes = $request->sendToType;
         // $url = $request->url;

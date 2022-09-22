@@ -50,7 +50,7 @@ class LoginController extends Controller
         }
 
         $request->session()->regenerate();
-        $token = Auth::user()->createToken($request->email, ['abilities:fetch-data'])->plainTextToken;
+        $token = Auth::user()->createToken('api_auth_token', ['abilities:fetch-data'])->plainTextToken;
         Log::info(Auth::user());
 
         // Include necessary user data in Json response,

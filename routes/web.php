@@ -102,7 +102,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     // businessName i.e. "Bconnect%20Dev"
     Route::get('/api/fetch-business/{businessName}', [BusinessController::class, 'fetchOne']);
     // Needs Campaign ID, ideal for reminder text
-    Route::put('/api/send-text', [CampaignController::class, 'send']);
-    // Required fields: msgHeader, msgBody, msgUrl, businessId, sendToType. Optional: promoCode
-    Route::post('/api/create-text', [CampaignController::class, 'create']);
+    
+    // Route::group(['middleware' => ['apiPostAuth']], function() {
+    //     Route::put('/api/send-text', [CampaignController::class, 'send']);
+    
+    //     Required fields: msgHeader, msgBody, msgUrl, businessId, sendToType. Optional: promoCode
+    //     Route::post('/api/create-text', [CampaignController::class, 'create']);
+    // });
 });

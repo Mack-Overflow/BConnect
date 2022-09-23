@@ -99,24 +99,11 @@ class CampaignController extends Controller
     }
 
     /**
-     * Endpoint: POST /send-campaign
+     * Endpoint: PUT /send-campaign & /api/send-campaign
      */
     public function send(SendCampaignRequest $request)
     {
-        // Replace fields with campaignId that can be read in send method
-
-        // $textId = $request->campaignId
-        // \Log::info($request);
         $campId = $request->campaignId;
-        return null;
-        // $header = $request->header;
-        // $sendToTypes = $request->sendToType;
-        // $url = $request->url;
-        // $body = $request->body;
-        // $businessId = $request->businessId;
-        // $promoCode = $request->promoCode;
-
         return $this->smsService->send($campId);
-        // return $this->smsService->send($textId);
     }
 }

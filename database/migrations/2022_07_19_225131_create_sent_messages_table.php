@@ -19,7 +19,7 @@ return new class extends Migration
             // $table->foreignId('messageId')->references('id')->on('text_messages');
             $table->string('sendToType')->references('type')->on('send_to_types')->default("");
             $table->foreignId('textMessageId')->references('id')->on('text_messages')->default(0)->onDelete('cascade');
-            $table->integer('timesSent');
+            $table->integer('timesSent')->default(0);
             // $table->
             $table->timestamps();
         });

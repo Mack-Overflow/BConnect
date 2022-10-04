@@ -122,7 +122,7 @@ class UploadRecordsService
                     'visitDate'  => $date,
                     'phoneNumber' => $phoneNo,
                     'businessId' => $businessId,
-                    
+                    'lastMsgSentType' => 'Uncontacted'
                 ];
 
                 $subscriber = Subscriber::firstOrCreate($insertData);

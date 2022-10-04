@@ -17,8 +17,8 @@ return new class extends Migration
             $table->timestamp('subscribed_at')->default(null)->nullable();
             $table->timestamp('unsubscribed_at')->default(null)->nullable();
             // $table->integer('googleReviewLinksClicked')->default(0);
-            // $table->string('lastMsgSentType')->change();
-            // $table->foreign('lastMsgSentType')->references('type')->on('send_to_types');
+            $table->string('lastMsgSentType');
+            $table->foreign('lastMsgSentType')->references('type')->on('send_to_types');
         });
     }
 

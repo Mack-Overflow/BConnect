@@ -47,7 +47,8 @@ class LoginController extends Controller
     {
         if (!auth()->attempt($request->only('email', 'password')))
         {
-            throw new AuthenticationException();
+            return response()->json(['error' => 'Invalid login credentials'], 400);
+            // throw new AuthenticationException();
         }
 
         $request->session()->regenerate();

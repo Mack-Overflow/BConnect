@@ -20,6 +20,7 @@ class SubscriberController extends Controller
         \Log::info($request->user());
         $subscriber = Subscriber::where('phoneNumber', $request->phoneNumber)->first();
         \Log::info($subscriber);
+        if ($subscriber == null) $subscriber = "No subscriber found";
         return response()->json(['subscriber' => $subscriber], 201);
     }
 

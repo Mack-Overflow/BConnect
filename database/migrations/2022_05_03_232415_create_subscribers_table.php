@@ -26,6 +26,8 @@ return new class extends Migration
             $table->foreignId('lastMsgSentType')->references('type')->on('send_to_types');
             $table->integer('messagesReceived')->default(0);
             $table->boolean('subscribed')->default(false);
+            $table->timestamp('subscribed_at')->default(null)->nullable();
+            $table->timestamp('unsubscribed_at')->default(null)->nullable();
             $table->timestamps();
         });
     }

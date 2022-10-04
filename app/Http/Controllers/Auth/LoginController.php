@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Business;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 
@@ -52,10 +53,11 @@ class LoginController extends Controller
         $request->session()->regenerate();
         $token = Auth::user()->createToken('api_auth_token', ['abilities:fetch-data'])->plainTextToken;
         Log::info(Auth::user());
+        $businessData = Business::find(Auth::user()->businessId);
 
         // Include necessary user data in Json response,
         // Issues API Token to be used as bearer token in Authorization headers
-        return response()->json(['message' => 'Logged In!', 'token' => $token], 201);
+        return response()->json(['message' => 'Logged In!', 'token' => $token, 'businessData' => $businessData], 201);
     }
 
 

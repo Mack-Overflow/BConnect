@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('subscribers', function ($table) {
-            $table->integer('googleReviewLinksClicked')->default(0);
+            $table->timestamp('subscribed_at')->default(null)->nullable();
+            $table->timestamp('unsubscribed_at')->default(null)->nullable();
+            // $table->integer('googleReviewLinksClicked')->default(0);
             // $table->string('lastMsgSentType')->change();
             // $table->foreign('lastMsgSentType')->references('type')->on('send_to_types');
         });
@@ -27,10 +29,12 @@ return new class extends Migration
      */
     public function down()
     {
-        // Schema::table('subscribers', function ($table) {
+        Schema::table('subscribers', function ($table) {
+            // $table->dropColumn('subscribed_at');
+            // $table->dropColumn('unsubscribed_at');
             // $table->dropColumn('googleReviewLinksClicked');
         //     $table->dropForeign('lastMsgSentType');
         //     $table->dropColumn('lastMsgSentType');
-        // });
+        });
     }
 };

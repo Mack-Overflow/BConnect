@@ -12,10 +12,10 @@ class BusinessController extends Controller
      */
     public function fetchOne(Request $request)
     {
-        \Log::info($request->businessName);
-        $bizName = $request->businessName;
+        \Log::info($request->businessId);
+        $bizId = $request->businessId;
 
-        $business = Business::where('business_name', $bizName)->first();
+        $business = Business::find('business_name', $bizId);
         return response()->json(['business' => $business], 201);
     }
 }

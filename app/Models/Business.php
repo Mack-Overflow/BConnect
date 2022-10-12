@@ -31,6 +31,7 @@ class Business extends Model
         'google_place_id',
         'google_review_count_onboarding', // Total Google reviews when company registered
         'total_google_review_count' // Total Google review count now
+        // 'twilio_from_number' // Twilio phone number for production
     ];
 
     public static function find(int $id)

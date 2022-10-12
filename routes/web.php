@@ -105,6 +105,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     
     Route::group(['middleware' => ['apiPostAuth']], function() {
         Route::put('/api/send-campaign', [CampaignController::class, 'send']);
+        Route::post('/api/send-single-text', [CampaignController::class, 'sendSingleText']);
         Route::post('/api/create-subscriber', [SubscriberController::class, 'store']);
         
         // Required fields: msgHeader, msgBody, msgUrl, businessId, sendToType. Optional: promoCode

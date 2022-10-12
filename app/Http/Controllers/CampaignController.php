@@ -106,4 +106,17 @@ class CampaignController extends Controller
         $campId = $request->campaignId;
         return $this->smsService->send($campId);
     }
+
+    /**
+     * Endpoint: POST /send-single-text
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function sendSingleText(Request $request)
+    {   
+        return $this->smsService->sendSingleText($request);
+    }
 }
+
+

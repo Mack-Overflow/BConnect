@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SendToType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Url;
 use App\Models\Subscriber;
@@ -22,7 +23,6 @@ class SmsService
 
     public function __construct(GenerateReviewUrlService $gr)
     {
-        $this->genReview = $gr;
         // $this->client = $client;
     }
 
@@ -65,6 +65,8 @@ class SmsService
             // Get Twilio keys
             $account_id = getenv('TWILIO_SID');
             $auth_tok = getenv('TWILIO_TOKEN');
+            
+            // Replace below with Business Twilio number
             $twilio_num = getenv('TWILIO_FROM');
 
             $client = new Client($account_id, $auth_tok);
@@ -248,5 +250,58 @@ class SmsService
         ]);
 
         return $shortUrl;
+    }
+
+    public function sendSingleText(Request $request)
+    {
+        $account_id = getenv('TWILIO_SID');
+        $auth_tok = getenv('TWILIO_TOKEN');
+        $twilio_num = getenv('TWILIO_FROM'); // Replace with business twilio number
+
+        if (getenv('APP_ENV') === 'local') {
+            // $reviewerNo = "+14352224432";
+            // Replace with Ngrok
+            $shortUrlLink = getenv("NGROK_URL");
+        } else if (getenv('APP_ENV') === 'staging') {
+            $shortUrlLink = "https://api.bconnect-staging.com/link/";
+
+            // TEMPORARY WHILE ASSIGNING NEW TWILIO URL
+            return response()->json(['message' => 'Single text-message send endpoint hit'], 200);
+        } else if (getenv('APP_ENV') === 'production') {
+            $shortUrlLink = "https://api.bconnect.com/link/";
+        }
+
+        try {
+            $header = $request->msgHeader;
+            $body = $request->body;
+            $url = $request->url;
+            $businessId = \Auth::user()->businessId;
+            $promoCode = $request->promoCode;
+            $recipientNo = $request->recipientNo;
+
+            // Handle URL 
+
+            // if ($url) {
+            //     $shortUrl = !Url::where('fullUrl', $url)->exists() ? self::handleNewUrl($url, $recipientNo, $businessId) : Url::where(['fullUrl' => $url, 'businessId' => $businessId])->first()->shortUrl;
+            // } else {
+            //     $shortUrl = '';
+            //     $shortUrlLink = '';
+            // }
+
+            $client = new Client($account_id, $auth_tok);
+            
+            // Send message
+
+            // $client->messages->create($textInfo['recipientNo'], [
+            //     'from' => $twilio_num,
+            //     'body' => "$header \n\n $body \n $shortUrlLink$shortUrl"
+            // ]));
+
+            return response()->json(['message' => 'Successfully created message (test endpoint)'], 200);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+        
     }
 }

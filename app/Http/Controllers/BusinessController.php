@@ -8,14 +8,19 @@ use App\Models\Business;
 class BusinessController extends Controller
 {
     /**
-     * Endpoint: GET /api/fetch-business/{businessName}
+     * Endpoint: GET /api/fetch-business/businessId
      */
     public function fetchOne(Request $request)
     {
         \Log::info($request->businessId);
-        $bizId = $request->businessId;
+        try {
+            $bizId = intval($request->businessId);
 
-        $business = Business::find('business_name', $bizId);
+            $business = Business::find($bizId);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+        }
+        
         return response()->json(['business' => $business], 201);
     }
 }

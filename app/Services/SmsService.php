@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SendToType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\SendTextRequest;
 use App\Models\Url;
 use App\Models\Subscriber;
 use App\Models\TextMessage;
@@ -252,7 +253,7 @@ class SmsService
         return $shortUrl;
     }
 
-    public function sendSingleText(Request $request)
+    public function sendSingleText(SendTextRequest $request)
     {
         $account_id = getenv('TWILIO_SID');
         $auth_tok = getenv('TWILIO_TOKEN');

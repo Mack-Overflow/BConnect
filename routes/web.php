@@ -82,7 +82,9 @@ Route::post('/delivery-status', [IncomingSmsController::class, 'deliveryStatus']
 
 
 // ----------- A P I  S P E C I F I C  R O U T E S -------------------------------
-// Ensure before login that following pre-request script is added: 
+Route::get('/api/fetch-business/{businessId}', [BusinessController::class, 'fetchOne']);
+
+// For protected routes, make sure before login that following pre-request script is added: 
 // pm.sendRequest({
 //     url: pm.environment.get('APP_URL') + 'sanctum/csEBrf-cookie',
 //     method: 'GET'
@@ -100,7 +102,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     // phoneNumber i.e "+18001012222"
     Route::get('/api/fetch-subscriber/{phoneNumber}', [SubscriberController::class, 'retrieve']);
     // businessName i.e. "Bconnect%20Dev"
-    Route::get('/api/fetch-business/{businessId}', [BusinessController::class, 'fetchOne']);
     // Needs Campaign ID, ideal for reminder text
     
     Route::group(['middleware' => ['apiPostAuth']], function() {

@@ -97,17 +97,18 @@ Route::get('/api/fetch-business/{businessId}', [BusinessController::class, 'fetc
 // Route::post('/api/login', [LoginController::class, 'apiLogin']);
 Route::post('/api/login', [LoginController::class, 'apiLogin']);
 
+// Public routes that need to be throttled. In production, throttle every 10 minutes
+Route::group(['middleware' => ['throttle:4,1']], function() {
+    Route::post('/api/create-subscriber', [SubscriberController::class, 'store']);
+});
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
     // phoneNumber i.e "+18001012222"
     Route::get('/api/fetch-subscriber/{phoneNumber}', [SubscriberController::class, 'retrieve']);
-    // businessName i.e. "Bconnect%20Dev"
-    // Needs Campaign ID, ideal for reminder text
     
     Route::group(['middleware' => ['apiPostAuth']], function() {
         Route::put('/api/send-campaign', [CampaignController::class, 'send']);
         Route::post('/api/send-single-text', [CampaignController::class, 'sendSingleText']);
-        Route::post('/api/create-subscriber', [SubscriberController::class, 'store']);
         
         // Required fields: msgHeader, msgBody, msgUrl, businessId, sendToType. Optional: promoCode
         Route::post('/api/create-campaign', [CampaignController::class, 'create']);

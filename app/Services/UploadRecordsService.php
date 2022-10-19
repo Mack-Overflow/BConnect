@@ -23,7 +23,7 @@ class UploadRecordsService
         }
 
         \Log::info($fileName);
-        self::uploadCsv($fileName);
+        return self::uploadCsv($fileName);
     }
 
 

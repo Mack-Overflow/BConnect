@@ -37,7 +37,7 @@ class CampaignController extends Controller
         \Log::info($request->businessId);
         try {
             $types = SendToType::get()->toArray();
-            \Log::info($types);
+            // \Log::info($types);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 400);

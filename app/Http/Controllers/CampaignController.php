@@ -7,6 +7,7 @@ use App\Models\SendToType;
 use App\Models\TextMessage;
 use App\Services\SmsService;
 use App\Http\Requests\SendCampaignRequest;
+use App\Http\Requests\SendTextRequest;
 
 class CampaignController extends Controller
 {
@@ -110,10 +111,10 @@ class CampaignController extends Controller
     /**
      * Endpoint: POST /send-single-text
      * 
-     * @param Request $request
+     * @param SendTextRequest $request
      * @return JsonResponse
      */
-    public function sendSingleText(Request $request)
+    public function sendSingleText(SendTextRequest $request)
     {   
         return $this->smsService->sendSingleText($request);
     }

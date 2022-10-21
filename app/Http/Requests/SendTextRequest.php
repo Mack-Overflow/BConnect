@@ -13,7 +13,7 @@ class SendTextRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,11 +24,12 @@ class SendTextRequest extends FormRequest
     public function rules()
     {
         return [
-            'header' => 'required|string',
+            'msgHeader' => 'required|string',
             'body' => 'required|string',
-            'url' => 'required|string',
+            'url' => 'string',
             'businessId' => 'required',
-            'recipientNo' => 'required'
+            'recipientNo' => 'required',
+            'promoCode' => 'string',
         ];
     }
 }

@@ -109,7 +109,7 @@ class UploadRecordsService
                 $phoneNo = $entry["Phone No."];
                 $businessId = auth()->user()->businessId;
 
-                if (sizeof($phoneNo) === 10) {
+                if (strlen($phoneNo) === 10) {
                     $phoneNo = "+1".$phoneNo;
                 } else {
                     $numSkipped++;
